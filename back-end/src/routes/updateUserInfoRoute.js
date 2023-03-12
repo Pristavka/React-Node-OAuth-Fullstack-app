@@ -6,7 +6,7 @@ export const updateUserInfoRoute = {
   path: "/api/users/:userId",
   method: "put",
   handler: async (req, res) => {
-    const { authorization } = req.handler;
+    const { authorization } = req.headers;
     const { userId } = req.params;
 
     const updates = ({ favoriteFood, hairColor, bio }) =>
@@ -21,7 +21,7 @@ export const updateUserInfoRoute = {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) res.status(401).json({ message: "Unable to verify token" });
 
-      const { id } = decoded;
+      const { id, email } = decoded;
 
       if (id !== userId)
         res
@@ -32,23 +32,23 @@ export const updateUserInfoRoute = {
       const result = await db
         .collection("users")
         .findOneAndUpdate(
-          { _id: ObjectId(id) },
+          { email },
           { $set: { userInfo: updates } },
           { returnDocument: "after" }
         );
+
+      const { isEmailVerified, userInfo } = result.value;
+
+      jwt.sign(
+        { id, email, isEmailVerified, userInfo },
+        process.env.JWT_SECRET,
+        { expiresIn: "2d" },
+        async (err, token) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json({ token });
+        }
+      );
     });
-
-    const { email, isEmailVerified, userInfo } = result.value;
-
-    jwt.sign(
-      { id, email, isEmailVerified, userInfo },
-      process.env.JWT_SECRET,
-      { expiresIn: "2d" },
-      async (err, token) => {
-        if (err) return res.status(500).json(err);
-
-        return res.status(200).json({ token });
-      }
-    );
   }
 };
