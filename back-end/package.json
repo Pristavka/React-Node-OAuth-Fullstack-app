@@ -1,0 +1,24 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node -r dotenv/config ./src/server.js",
+    "mongod:start": "mongod --config /usr/local/etc/mongod.conf",
+    "mongod:id": "pgrep mongod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "7.13.10",
+    "@babel/node": "7.13.12",
+    "@babel/preset-env": "7.13.12",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.1.0"
+  }
+}
