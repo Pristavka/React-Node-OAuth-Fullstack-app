@@ -1,15 +1,25 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useToken } from '../auth/useToken';
 
 export const LogInPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [token, setToken] = useToken();
 
     const navigation = useNavigate();
 
     const onLoginClick = async () => {
+        const response = await axios.post('http://localhost:8080/api/login', {
+            email,
+            password
+        });
 
+        const { token } = response.data;
+        setToken(token);
+        navigation('/');
     }
 
     return (

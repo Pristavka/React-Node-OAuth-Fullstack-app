@@ -9,11 +9,11 @@ export const SignUpPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [setToken] = useToken();
+    const [token, setToken] = useToken();
     const navigation = useNavigate();
 
     const onSignUpClick = async () => {
-        const response = await axios.post('/api/signup', {
+        const response = await axios.post('http://localhost:8080/api/signup', {
             email,
             password
         });
